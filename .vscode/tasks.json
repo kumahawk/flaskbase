@@ -1,0 +1,35 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "process",
+			"command": "flask",
+			"label": "flask: run flask server",
+			"options": {
+				"env": {
+					"FLASK_APP": "app.py",
+					"FLASK_DEBUG": "1"
+				}
+			},
+			"args": [
+				"run",
+				"--host=0.0.0.0",
+				"-p 5000",
+				"--debug",
+				"--reload"
+			],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
