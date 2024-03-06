@@ -47,6 +47,7 @@ def NotFound(environ, start_response):
 
 application = PathDispatcher(NotFound, make_app)
 if __name__ == '__main__':
-    os.environ['EAGLEVIEWERDB'] = 'C:\\Users\\yosuke\\Documents\\vs\\eagleViewer\\var\\eagle.db'
-    with make_server('localhost', 5000, application) as httpd:
+    os.environ['EAGLEVIEWERDB'] = 'C:\\Users\\yosuke\\Documents\\eagle.db'
+    os.environ['ASSETVIEWERDB'] = 'C:\\Users\\yosuke\\Documents\\資産管理.db'
+    with make_server('0.0.0.0', 5000, application) as httpd:
         httpd.serve_forever()
