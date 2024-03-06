@@ -1,8 +1,7 @@
 from threading import Lock
 from wsgiref.util import shift_path_info
-from wsgiref.simple_server import make_server
+import waitress
 import importlib
-import fitz
 import os
 
 class PathDispatcher(object):
@@ -45,9 +44,7 @@ def NotFound(environ, start_response):
     start_response("404 Not Found", [("Content-Type", "text/plain")])
     return [b"not found"]
 
-application = PathDispatcher(NotFound, make_app)
+app = PathDispatcher(NotFound, make_app)
 if __name__ == '__main__':
-    os.environ['EAGLEVIEWERDB'] = 'C:\\Users\\yosuke\\Documents\\eagle.db'
-    os.environ['ASSETVIEWERDB'] = 'C:\\Users\\yosuke\\Documents\\資産管理.db'
-    with make_server('0.0.0.0', 5000, application) as httpd:
-        httpd.serve_forever()
+    waitress.serve(app, host='0.0.0.0', port=5000)
+
