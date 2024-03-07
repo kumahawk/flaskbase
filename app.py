@@ -1,8 +1,18 @@
+import os
+import traceback
+import yaml
+import logging
+import logging.config
+
+with open(os.path.join(os.path.dirname(__file__), 'logging.yaml'), 'r') as yml:
+    dict = yaml.safe_load(yml)
+    logging.config.dictConfig(dict)
+
 from threading import Lock
 from wsgiref.util import shift_path_info
 import waitress
 import importlib
-import os
+from paste.translogger import TransLogger
 
 class PathDispatcher(object):
     def __init__(self, default_app, create_app):
@@ -36,9 +46,11 @@ def make_app(prefix):
         app.URLBASE = "/" + prefix
         return app
     except ModuleNotFoundError as e:
+        logging.error(traceback.format_exc())
         return None
     except Exception as e:
-        raise e    
+        logging.error(traceback.format_exc())
+        raise e
 
 def NotFound(environ, start_response):
     start_response("404 Not Found", [("Content-Type", "text/plain")])
@@ -46,5 +58,7 @@ def NotFound(environ, start_response):
 
 app = PathDispatcher(NotFound, make_app)
 if __name__ == '__main__':
-    waitress.serve(app, host='0.0.0.0', port=5000)
-
+    try:
+        waitress.serve(TransLogger(app, setup_console_handler=False), listen="*:5000", ipv6=True, ipv4=True, expose_tracebacks=True, threads=10)
+    except Exception as e:
+        logging.critical(traceback.format_exc())
