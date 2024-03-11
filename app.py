@@ -1,4 +1,7 @@
 import os
+
+os.chdir(os.path.dirname(__file__))
+
 import traceback
 import yaml
 import logging
